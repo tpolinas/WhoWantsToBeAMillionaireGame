@@ -8,6 +8,9 @@
 import UIKit
 
 final class GameViewController: UIViewController {
+    
+    // MARK: - IBOutlet properties
+    
     @IBOutlet var questionLabel: UILabel!
     @IBOutlet var scoreLabel: UILabel!
     @IBOutlet var answer1: UIButton!
@@ -18,9 +21,14 @@ final class GameViewController: UIViewController {
     @IBOutlet var audienceHelpLifeline: UIButton!
     @IBOutlet var removeTwoLifeline: UIButton!
     @IBOutlet var takeCashLifeline: UIButton!
+    
+    // MARK: - Properties
+    
     weak var delegate: GameDelegate?
     var answerButtonsCollection = [UIButton]()
     var lifelineButtonsCollection = [UIButton]()
+    
+    // MARK: - IBAction functions
     
     @IBAction func exitToMainMenuButton() {
         takeCash()
@@ -34,6 +42,9 @@ final class GameViewController: UIViewController {
     
     @IBAction func lifelinePressed(sender: UIButton!) {
         switch sender {
+            
+        // MARK: - Cases
+            
         case removeTwoLifeline:
             removeTwo()
         case callFriendLifeline:
@@ -46,6 +57,8 @@ final class GameViewController: UIViewController {
             break
         }
     }
+    
+    // MARK: - Constants
     
     let scoreValues = [
         0: 0,
@@ -60,6 +73,8 @@ final class GameViewController: UIViewController {
         9: 999_000,
         10: 1_000_000
     ]
+    
+    // MARK: - Initialization
     
     var gameSession = GameSession()
     
@@ -82,6 +97,8 @@ final class GameViewController: UIViewController {
     }
     
     var wrongAnswers = [Int]()
+    
+    // MARK: - Functions
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -175,6 +192,9 @@ final class GameViewController: UIViewController {
     
     func gameLost() {
         switch score {
+            
+        // MARK: - Cases
+            
         case 0..<1_000:
             score = 0
         case 1_000..<50_000:
@@ -239,6 +259,9 @@ final class GameViewController: UIViewController {
         var friendsAnswer = Int()
         var isSure = false
         switch randomNumber {
+            
+        // MARK: - Cases
+            
         case 1, 2, 3, 5, 7, 8, 9:
             friendsAnswer = rightAnswer
             isSure = true
@@ -253,6 +276,9 @@ final class GameViewController: UIViewController {
         
         var message = ""
         switch friendsAnswer {
+            
+        // MARK: - Cases
+            
         case 0:
             message = "Sorry, I really have no idea. \n Lean upon only your own feeling of right."
         case 1:

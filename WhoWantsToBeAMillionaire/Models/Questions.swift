@@ -8,10 +8,15 @@
 import Foundation
 
 struct Question {
+    
+    // MARK: - Properties
+    
     let question: String
     let answers: [String]
     let rightAnswer: Int
 }
+    
+    // MARK: - Constants
 
 let questionsSet: [Question] = [
     question1,
@@ -25,6 +30,8 @@ let questionsSet: [Question] = [
     question9,
     question10
 ]
+
+    // MARK: - Constants
 
 private let question1 = Question(
                             question: "What country is the city of Sault Ste. Marie?",

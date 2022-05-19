@@ -10,6 +10,9 @@ import UIKit
 final class RecordsViewController: UIViewController,
                                     UITableViewDelegate,
                                     UITableViewDataSource {
+    
+    // MARK: - IBOutlet properties
+    
     @IBOutlet var tableView: UITableView!
     @IBAction func clearButtonPressed(
         _ sender: UIBarButtonItem
@@ -18,17 +21,21 @@ final class RecordsViewController: UIViewController,
         self.tableView.reloadData()
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        tableView.delegate = self
-        tableView.dataSource = self
-    }
+    // MARK: - Initialization
     
     private let dateFormater: DateFormatter = {
         let dateFormater = DateFormatter()
         dateFormater.dateStyle = .short
         return dateFormater
     }()
+    
+    // MARK: - Functions
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        tableView.delegate = self
+        tableView.dataSource = self
+    }
     
     func tableView(
         _ tableView: UITableView,

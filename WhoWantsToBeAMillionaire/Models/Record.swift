@@ -8,6 +8,9 @@
 import Foundation
 
 struct Record: Codable {
+    
+    // MARK: - Properties
+    
     let date: Date
     let score: Int
 }

@@ -8,16 +8,23 @@
 import Foundation
 
 class Game {
+    
+    // MARK: - Constants
+    
     var gameSession: GameSession?
     static let instance = Game()
     private let recordsCaretaker = RecordsCaretaker()
     private init() { }
+    
+    // MARK: - Properties
     
     var records = [Record]() {
         didSet {
             recordsCaretaker.save(records: records)
         }
     }
+    
+    // MARK: - Public functions
     
     func addRecord(record: Record ) {
         self.records.append(record)
@@ -27,6 +34,8 @@ class Game {
         records = []
     }
 }
+
+    // MARK: - Extensions
 
 extension Game: GameDelegate {
     func didEndGame(withScore score: Int) {

@@ -8,6 +8,9 @@
 import Foundation
 
 class GameSession {
+    
+    // MARK: - Properties
+    
     var questionNumber: Int = 0
     var callFriendUsed = false
     var audienceHelpUsed = false

@@ -7,6 +7,8 @@
 
 import Foundation
 
+    // MARK: - Protocols
+
 protocol GameDelegate: AnyObject {
     func didEndGame(withScore score: Int)
 }
