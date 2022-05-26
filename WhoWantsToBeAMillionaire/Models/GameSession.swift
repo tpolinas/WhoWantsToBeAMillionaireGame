@@ -15,5 +15,7 @@ class GameSession {
     var callFriendUsed = false
     var audienceHelpUsed = false
     var removeTwoUsed = false
+    var difficulty: Difficulty = .hard
+    var sequence: Sequence = .sequentally
 }
 

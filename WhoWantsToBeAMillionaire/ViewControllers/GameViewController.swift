@@ -27,6 +27,7 @@ final class GameViewController: UIViewController {
     weak var delegate: GameDelegate?
     var answerButtonsCollection = [UIButton]()
     var lifelineButtonsCollection = [UIButton]()
+    private var questions = [Question]()
     
     // MARK: - IBAction functions
     
@@ -36,7 +37,6 @@ final class GameViewController: UIViewController {
     
     @IBAction func answerPressed(sender: UIButton!) {
         hideQuestion()
-        setupScoreLabel()
         rightAnswer == sender.tag ? didAnsweredRight() : gameLost()
     }
     
@@ -77,18 +77,10 @@ final class GameViewController: UIViewController {
     // MARK: - Initialization
     
     var gameSession = GameSession()
-    
-    var initialProgressIndicatorPosition = CGFloat()
     var score = 0
-    var questionNumber = 0 {
-        didSet {
-            gameSession.questionNumber = questionNumber
-            guard
-                let score = scoreValues[questionNumber]
-            else { return }
-            self.score = score
-        }
-    }
+    var playerName: String = ""
+    var questionNumber = Observable<Int>(0)
+    var questionsCount = Int()
     
     var rightAnswer = Int() {
         didSet {
@@ -98,46 +90,117 @@ final class GameViewController: UIViewController {
     
     var wrongAnswers = [Int]()
     
-    // MARK: - Functions
+    func setupQuestionsDifficulity(_: [Question]) -> [Question] {
+        questions = chooseDifficultyStrategy.setupGame(
+                            lifelineButtons: lifelineButtonsCollection)
+        questionsCount = questions.count
+        checkForUsersQuestionsExistance()
+        return questions
+    }
+    
+    func setupQuestionsSequence(_: [Question]) -> [Question] {
+        questions = setupSelectedSequence.setupGame(
+                            lifelineButtons: lifelineButtonsCollection,
+                            questions)
+        questionsCount = questions.count
+        return questions
+    }
+    
+    var difficulty: Difficulty = .hard {
+        didSet {
+            gameSession.difficulty = difficulty
+        }
+    }
+    
+    var sequence: Sequence = .sequentally {
+        didSet {
+            gameSession.sequence = sequence
+        }
+    }
+    
+    private var chooseDifficultyStrategy: DifficultyStrategy {
+        switch difficulty {
+        case .easy: return EasyModeStrategy()
+        case .hard: return HardModeStrategy()
+        case .insane: return InsaneModeStrategy()
+        case .custom: return CustomModeStrategy()
+        }
+    }
+    
+    private var setupSelectedSequence: SequenceStrategy {
+        switch sequence {
+        case .sequentally: return SequentiallyStrategy()
+        case .shuffled: return ShuffledStrategy()
+        }
+    }
+    
+    // MARK: - Lyfecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupQuestion()
         initialSetup()
+        questionNumber.addObserver(
+            self,
+            options: [
+                .new,
+                .initial
+            ],
+            closure: { [weak self] (number, _) in
+            if number < 10 {
+                self?.title = "Question \(number + 1)"
+            }
+            self?.gameSession.questionNumber = number
+            guard let score = self?.scoreValues[number] else { return }
+            self?.score = score
+        })
     }
+    
+    // MARK: - Functions
     
     func initialSetup() {
         delegate = Game.instance
         Game.instance.gameSession = gameSession
-        answerButtonsCollection = [
-            answer1,
-            answer2,
-            answer3,
-            answer4
-        ]
         answerButtonsCollection.forEach {
             $0.titleLabel?.textAlignment = .center
         }
-        lifelineButtonsCollection = [
-            removeTwoLifeline,
-            callFriendLifeline,
-            audienceHelpLifeline,
-            takeCashLifeline
-        ]
-        setupQuestion()
     }
     
     func setupQuestion(action: UIAlertAction! = nil) {
-        title = "Question \(questionNumber + 1)"
-        answerButtonsCollection.forEach { $0.isHidden = false }
-        if questionNumber > 0 { setupScoreLabel() }
-        let currentQuestion = questionsSet[questionNumber]
-        questionLabel.text = currentQuestion.question
-        answer1.setTitle(currentQuestion.answers[0], for: .normal)
-        answer2.setTitle(currentQuestion.answers[1], for: .normal)
-        answer3.setTitle(currentQuestion.answers[2], for: .normal)
-        answer4.setTitle(currentQuestion.answers[3], for: .normal)
-        rightAnswer = currentQuestion.rightAnswer
+        
+        // MARK: - Initialization
+    
+        questions = setupQuestionsDifficulity(questions)
+        questions = setupQuestionsSequence(questions)
+        title = "Question \(questionNumber.value + 1)"
+        answerButtonsCollection.forEach { $0.isEnabled = true }
+        if questions.count > 0 {
+            setupScoreLabel()
+            let currentQuestion = questions[questionNumber.value]
+            questionLabel.text = currentQuestion.question
+            answer1.setTitle(currentQuestion.answers[0], for: .normal)
+            answer2.setTitle(currentQuestion.answers[1], for: .normal)
+            answer3.setTitle(currentQuestion.answers[2], for: .normal)
+            answer4.setTitle(currentQuestion.answers[3], for: .normal)
+            rightAnswer = currentQuestion.rightAnswer
+        } else {
+            checkForUsersQuestionsExistance()
+            let alert = UIAlertController(
+                            title: "Oh, no! There is no user's questions.",
+                            message: "Please, add your own questions before start.",
+                            preferredStyle: .alert)
+            alert.addAction(UIAlertAction(
+                                title: "OK",
+                                style: .default,
+                                handler: popToMainMenu(action:)))
+            present(
+                alert,
+                animated: true)
+            
+        }
     }
+    
+    // MARK: - Public functions
     
     func setupScoreLabel() {
         let increaseScore = score
@@ -152,8 +215,8 @@ final class GameViewController: UIViewController {
     }
     
     func didAnsweredRight() {
-        questionNumber += 1
-        if questionNumber < 10 {
+        questionNumber.value += 1
+        if questionNumber.value < questionsCount {
             let alert = UIAlertController(
                             title: "Correct!",
                             message: "Your current score is: $\(score)",
@@ -170,24 +233,46 @@ final class GameViewController: UIViewController {
         }
     }
     
+    func checkForUsersQuestionsExistance() {
+        if questions.count == 0 {
+            let alert = UIAlertController(
+                            title: "Oh, no! There is no user's questions.",
+                            message: "Please, add your own questions before start.",
+                            preferredStyle: .alert)
+            alert.addAction(UIAlertAction(
+                                title: "OK",
+                                style: .default,
+                                handler: popToMainMenu(action:)))
+            present(
+                alert,
+                animated: true)
+        }
+    }
+    
     func gameWon(action: UIAlertAction! = nil) {
         hideQuestion()
         let alert = UIAlertController(
                         title: "CONGRATULATIONS!",
                         message: "YOU WON $\(score)",
                         preferredStyle: .alert)
-        if questionNumber == 10 { alert.addAction(UIAlertAction(
+        if questionNumber.value == 10 { alert.addAction(UIAlertAction(
                                                 title: "New Game",
                                                 style: .default,
                                                 handler: restartGame)) }
         alert.addAction(UIAlertAction(
             title: "Exit",
             style: .default,
-            handler: exitToMainMenu))
+            handler: popToMainMenu))
         present(
             alert,
             animated: true)
-        delegate?.didEndGame(withScore: score)
+        delegate?.didEndGame(
+            difficulty: difficulty,
+            withScore: score,
+            name: playerName,
+            removeTwoUsed: gameSession.removeTwoUsed,
+            callFriendUsed: gameSession.callFriendUsed,
+            audienceHelpUsed: gameSession.audienceHelpUsed)
     }
     
     func gameLost() {
@@ -216,25 +301,35 @@ final class GameViewController: UIViewController {
         alert.addAction(UIAlertAction(
                         title: "Exit",
                         style: .default,
-                        handler: exitToMainMenu))
+                        handler: popToMainMenu))
         present(
             alert,
             animated: true)
-        delegate?.didEndGame(withScore: score)
+        delegate?.didEndGame(
+            difficulty: difficulty,
+            withScore: score,
+            name: playerName,
+            removeTwoUsed: gameSession.removeTwoUsed,
+            callFriendUsed: gameSession.callFriendUsed,
+            audienceHelpUsed: gameSession.audienceHelpUsed)
     }
     
     func restartGame(action: UIAlertAction! = nil) {
-        questionNumber = 0
+        questionNumber.value = 0
         lifelineButtonsCollection.forEach { $0.isEnabled = true }
         gameSession.removeTwoUsed = false
         gameSession.callFriendUsed = false
         gameSession.audienceHelpUsed = false
-        UIView.animate(withDuration: 1, delay: 0.0, options: .curveEaseInOut, animations: {
+        UIView.animate(
+            withDuration: 1,
+            delay: 0.0,
+            options: .curveEaseInOut,
+            animations: {
             self.view.layoutIfNeeded()
         }, completion: { _ in self.setupQuestion() })
     }
     
-    func exitToMainMenu(action: UIAlertAction! = nil) {
+    func popToMainMenu(action: UIAlertAction! = nil) {
         navigationController?.popViewController(animated: true)
         Game.instance.gameSession = nil
     }

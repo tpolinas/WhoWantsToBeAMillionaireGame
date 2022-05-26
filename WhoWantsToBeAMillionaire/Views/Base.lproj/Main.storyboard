@@ -64,11 +64,18 @@
                             <constraint firstItem="Khx-Wo-3RV" firstAttribute="trailing" secondItem="wc0-4P-5Yq" secondAttribute="trailing" constant="120" id="osA-7d-oaz"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="a4q-zJ-Exu"/>
+                    <navigationItem key="navigationItem" id="a4q-zJ-Exu">
+                        <barButtonItem key="rightBarButtonItem" image="gear" catalog="system" id="eZr-TS-k3w">
+                            <color key="tintColor" systemColor="systemOrangeColor"/>
+                            <connections>
+                                <segue destination="6KI-eW-jKT" kind="show" id="06k-SH-Rku"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5Y1-aV-1wf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2628.985507246377" y="375"/>
+            <point key="canvasLocation" x="2629" y="375"/>
         </scene>
         <!--Records-->
         <scene sceneID="M56-e2-xBI">
@@ -81,9 +88,23 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="RlW-bt-Xca">
                                 <rect key="frame" x="20" y="88" width="374" height="774"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <segmentedControl key="tableHeaderView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="jU1-3I-scT">
+                                    <rect key="frame" x="0.0" y="0.0" width="374" height="32"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" systemColor="systemYellowColor"/>
+                                    <segments>
+                                        <segment title="Easy"/>
+                                        <segment title="Hard"/>
+                                        <segment title="Insane"/>
+                                    </segments>
+                                    <color key="selectedSegmentTintColor" systemColor="systemOrangeColor"/>
+                                    <connections>
+                                        <action selector="didChooseDifficulty:" destination="nsk-zv-2LF" eventType="valueChanged" id="eFH-CB-ffv"/>
+                                    </connections>
+                                </segmentedControl>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="recordCell" textLabel="fWW-tV-w9x" detailTextLabel="AVO-AH-zgT" style="IBUITableViewCellStyleValue1" id="fAL-Sg-v9B">
-                                        <rect key="frame" x="0.0" y="44.5" width="374" height="43.5"/>
+                                        <rect key="frame" x="0.0" y="76.5" width="374" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="fAL-Sg-v9B" id="Lnm-y1-vff">
                                             <rect key="frame" x="0.0" y="0.0" width="374" height="43.5"/>
@@ -120,18 +141,293 @@
                     </view>
                     <navigationItem key="navigationItem" title="Records" id="qxO-p4-qyY">
                         <barButtonItem key="rightBarButtonItem" image="trash" catalog="system" id="FC6-bj-scP">
+                            <color key="tintColor" systemColor="systemOrangeColor"/>
                             <connections>
                                 <action selector="clearButtonPressed:" destination="nsk-zv-2LF" id="DM1-Kg-u2j"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="difficultyControl" destination="jU1-3I-scT" id="C2R-gE-vAr"/>
                         <outlet property="tableView" destination="RlW-bt-Xca" id="S4m-jB-O2C"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Oqc-WF-Klu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2629" y="1075"/>
+        </scene>
+        <!--Settings-->
+        <scene sceneID="K5J-5Y-Rna">
+            <objects>
+                <viewController id="6KI-eW-jKT" customClass="SettingsViewController" customModule="WhoWantsToBeAMillionaire" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="fbb-ho-SXK">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="XAS-Cz-jCY">
+                                <rect key="frame" x="91.5" y="470" width="231" height="32"/>
+                                <color key="backgroundColor" systemColor="systemYellowColor"/>
+                                <segments>
+                                    <segment title="SEQUENTIALLY"/>
+                                    <segment title="SHUFFLED"/>
+                                </segments>
+                                <color key="tintColor" systemColor="systemOrangeColor"/>
+                                <color key="selectedSegmentTintColor" systemColor="systemOrangeColor"/>
+                                <connections>
+                                    <action selector="didChooseSequence:" destination="6KI-eW-jKT" eventType="valueChanged" id="nAE-8F-P7T"/>
+                                </connections>
+                            </segmentedControl>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZgA-bK-azf">
+                                <rect key="frame" x="111" y="568" width="192" height="38"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="tintColor" systemColor="systemOrangeColor"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="ADD QUESTION">
+                                    <backgroundConfiguration key="background" cornerRadius="30">
+                                        <color key="backgroundColor" systemColor="systemOrangeColor"/>
+                                    </backgroundConfiguration>
+                                    <fontDescription key="titleFontDescription" type="system" weight="heavy" pointSize="20"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <segue destination="6FC-qN-lLp" kind="show" id="w3E-O2-j8F"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="DIFFICULTY LEVEL" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jpS-Uf-0IU">
+                                <rect key="frame" x="111.5" y="337" width="191" height="24"/>
+                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="20"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="f8S-po-oIf">
+                                <rect key="frame" x="70" y="371" width="274" height="32"/>
+                                <color key="backgroundColor" systemColor="systemYellowColor"/>
+                                <segments>
+                                    <segment title="EASY"/>
+                                    <segment title="HARD"/>
+                                    <segment title="INSANE"/>
+                                    <segment title="CUSTOM"/>
+                                </segments>
+                                <color key="tintColor" systemColor="systemOrangeColor"/>
+                                <color key="selectedSegmentTintColor" systemColor="systemOrangeColor"/>
+                                <connections>
+                                    <action selector="didChooseDifficulty:" destination="6KI-eW-jKT" eventType="valueChanged" id="c8u-ch-pig"/>
+                                </connections>
+                            </segmentedControl>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="QUESTIONS ORDER" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IQs-EB-ehs">
+                                <rect key="frame" x="111.5" y="437" width="191" height="24"/>
+                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="20"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AWi-iX-47J">
+                                <rect key="frame" x="111" y="632" width="192" height="67"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="192" id="3Vm-yr-grE"/>
+                                    <constraint firstAttribute="height" constant="67" id="EWe-5d-V5A"/>
+                                    <constraint firstAttribute="height" constant="67" id="ueM-SV-tnF"/>
+                                </constraints>
+                                <color key="tintColor" systemColor="systemOrangeColor"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled">
+                                    <backgroundConfiguration key="background" cornerRadius="30">
+                                        <color key="backgroundColor" systemColor="systemOrangeColor"/>
+                                    </backgroundConfiguration>
+                                    <string key="title">     USER'S
+QUESTIONS</string>
+                                    <fontDescription key="titleFontDescription" type="system" weight="heavy" pointSize="20"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <segue destination="urq-gk-bQB" kind="show" id="DoA-Q0-HYi"/>
+                                </connections>
+                            </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="gear" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="i98-IL-fFx">
+                                <rect key="frame" x="87" y="173" width="240" height="141"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="240" id="1uT-U3-tDn"/>
+                                    <constraint firstAttribute="height" constant="140.5" id="Z2A-x0-8ol"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="gUh-Ek-9gm"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="f8S-po-oIf" firstAttribute="top" secondItem="jpS-Uf-0IU" secondAttribute="bottom" constant="10" id="0tM-OP-dZL"/>
+                            <constraint firstItem="gUh-Ek-9gm" firstAttribute="trailing" secondItem="XAS-Cz-jCY" secondAttribute="trailing" constant="91.5" id="25M-vD-Mt9"/>
+                            <constraint firstItem="gUh-Ek-9gm" firstAttribute="trailing" secondItem="f8S-po-oIf" secondAttribute="trailing" constant="70" id="3D1-6d-fVq"/>
+                            <constraint firstItem="AWi-iX-47J" firstAttribute="leading" secondItem="ZgA-bK-azf" secondAttribute="leading" id="4ON-QH-YMr"/>
+                            <constraint firstItem="IQs-EB-ehs" firstAttribute="leading" secondItem="gUh-Ek-9gm" secondAttribute="leading" constant="111.5" id="4rZ-7g-eYH"/>
+                            <constraint firstItem="AWi-iX-47J" firstAttribute="trailing" secondItem="ZgA-bK-azf" secondAttribute="trailing" id="Aj0-64-inW"/>
+                            <constraint firstItem="XAS-Cz-jCY" firstAttribute="leading" secondItem="gUh-Ek-9gm" secondAttribute="leading" constant="91.5" id="JKv-JO-qQD"/>
+                            <constraint firstItem="gUh-Ek-9gm" firstAttribute="trailing" secondItem="AWi-iX-47J" secondAttribute="trailing" constant="111" id="LpJ-F6-iCq"/>
+                            <constraint firstItem="gUh-Ek-9gm" firstAttribute="trailing" secondItem="ZgA-bK-azf" secondAttribute="trailing" constant="111" id="LwG-nf-iDY"/>
+                            <constraint firstItem="jpS-Uf-0IU" firstAttribute="leading" secondItem="gUh-Ek-9gm" secondAttribute="leading" constant="111.5" id="MnZ-X6-Usg"/>
+                            <constraint firstItem="gUh-Ek-9gm" firstAttribute="trailing" secondItem="jpS-Uf-0IU" secondAttribute="trailing" constant="111.5" id="Ogv-2b-nVc"/>
+                            <constraint firstItem="XAS-Cz-jCY" firstAttribute="top" secondItem="IQs-EB-ehs" secondAttribute="bottom" constant="9" id="OhJ-fe-97K"/>
+                            <constraint firstItem="ZgA-bK-azf" firstAttribute="top" secondItem="XAS-Cz-jCY" secondAttribute="bottom" constant="67" id="Oks-dQ-Zc2"/>
+                            <constraint firstItem="AWi-iX-47J" firstAttribute="top" secondItem="ZgA-bK-azf" secondAttribute="bottom" constant="26" id="U0T-Rg-8Z7"/>
+                            <constraint firstItem="IQs-EB-ehs" firstAttribute="top" secondItem="f8S-po-oIf" secondAttribute="bottom" constant="35" id="XSA-Uc-bVN"/>
+                            <constraint firstItem="gUh-Ek-9gm" firstAttribute="trailing" secondItem="i98-IL-fFx" secondAttribute="trailing" constant="87" id="m2o-0W-9F1"/>
+                            <constraint firstItem="i98-IL-fFx" firstAttribute="top" secondItem="gUh-Ek-9gm" secondAttribute="top" constant="85" id="m6W-6O-mbf"/>
+                            <constraint firstItem="i98-IL-fFx" firstAttribute="leading" secondItem="gUh-Ek-9gm" secondAttribute="leading" constant="87" id="pQV-Yy-ADr"/>
+                            <constraint firstItem="AWi-iX-47J" firstAttribute="leading" secondItem="gUh-Ek-9gm" secondAttribute="leading" constant="111" id="qi4-1h-cDg"/>
+                            <constraint firstItem="ZgA-bK-azf" firstAttribute="leading" secondItem="gUh-Ek-9gm" secondAttribute="leading" constant="111" id="s9p-Fu-lYp"/>
+                            <constraint firstItem="gUh-Ek-9gm" firstAttribute="trailing" secondItem="IQs-EB-ehs" secondAttribute="trailing" constant="111.5" id="v8D-4Y-2gC"/>
+                            <constraint firstItem="f8S-po-oIf" firstAttribute="leading" secondItem="gUh-Ek-9gm" secondAttribute="leading" constant="70" id="vu5-Na-J4v"/>
+                            <constraint firstItem="jpS-Uf-0IU" firstAttribute="top" secondItem="gUh-Ek-9gm" secondAttribute="top" constant="249" id="y4g-BI-LsP"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Settings" id="aAU-BY-tfr"/>
+                    <connections>
+                        <outlet property="difficultyControl" destination="f8S-po-oIf" id="HPF-aH-IGn"/>
+                        <outlet property="sequenceControl" destination="XAS-Cz-jCY" id="24j-iz-Dzz"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4OS-eH-aJB" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2628.985507246377" y="-328.125"/>
+        </scene>
+        <!--Add Question-->
+        <scene sceneID="Yl5-W9-hPQ">
+            <objects>
+                <viewController id="6FC-qN-lLp" customClass="AddQuestionViewController" customModule="WhoWantsToBeAMillionaire" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="TRW-kU-xfX">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="qy0-8U-fTA">
+                                <rect key="frame" x="20" y="88" width="374" height="590"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="AddQuestionCell" id="TXE-9M-yPt">
+                                        <rect key="frame" x="0.0" y="44.5" width="374" height="43.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="TXE-9M-yPt" id="mmp-9d-iXV">
+                                            <rect key="frame" x="0.0" y="0.0" width="374" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5F5-oe-AGE">
+                                <rect key="frame" x="100" y="699" width="214" height="72"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="72" id="32G-vc-aAd"/>
+                                    <constraint firstAttribute="width" constant="214" id="XQG-pu-1Hk"/>
+                                </constraints>
+                                <color key="tintColor" systemColor="systemOrangeColor"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled">
+                                    <backgroundConfiguration key="background" cornerRadius="30">
+                                        <color key="backgroundColor" systemColor="systemOrangeColor"/>
+                                    </backgroundConfiguration>
+                                    <string key="title">ADD ONE MORE 
+      QUESTION</string>
+                                    <fontDescription key="titleFontDescription" type="system" weight="heavy" pointSize="20"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="addOneMoreQuestion:" destination="6FC-qN-lLp" eventType="touchUpInside" id="TaK-KE-TNc"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NNr-ft-gHg">
+                                <rect key="frame" x="100" y="779" width="214" height="72"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="72" id="7sN-gY-Wtr"/>
+                                    <constraint firstAttribute="width" constant="214" id="TM5-X6-jrh"/>
+                                </constraints>
+                                <color key="tintColor" systemColor="systemOrangeColor"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="SAVE CHANGES">
+                                    <backgroundConfiguration key="background" cornerRadius="30">
+                                        <color key="backgroundColor" systemColor="systemOrangeColor"/>
+                                    </backgroundConfiguration>
+                                    <fontDescription key="titleFontDescription" type="system" weight="heavy" pointSize="20"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="saveChanges:" destination="6FC-qN-lLp" eventType="touchUpInside" id="eUD-ac-HbQ"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="ofI-gl-CXf"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="NNr-ft-gHg" firstAttribute="top" secondItem="5F5-oe-AGE" secondAttribute="bottom" constant="8" symbolic="YES" id="5Mp-6e-xlZ"/>
+                            <constraint firstItem="qy0-8U-fTA" firstAttribute="leading" secondItem="ofI-gl-CXf" secondAttribute="leading" constant="20" id="5ek-CE-Pln"/>
+                            <constraint firstItem="ofI-gl-CXf" firstAttribute="trailing" secondItem="5F5-oe-AGE" secondAttribute="trailing" constant="100" id="6r8-ci-IPc"/>
+                            <constraint firstItem="5F5-oe-AGE" firstAttribute="top" secondItem="qy0-8U-fTA" secondAttribute="bottom" constant="21" id="FJR-zm-8SV"/>
+                            <constraint firstItem="5F5-oe-AGE" firstAttribute="leading" secondItem="ofI-gl-CXf" secondAttribute="leading" constant="100" id="H0h-eo-GB5"/>
+                            <constraint firstItem="ofI-gl-CXf" firstAttribute="bottom" secondItem="NNr-ft-gHg" secondAttribute="bottom" constant="11" id="Ql3-ac-TFq"/>
+                            <constraint firstItem="5F5-oe-AGE" firstAttribute="top" secondItem="qy0-8U-fTA" secondAttribute="bottom" constant="21" id="et7-rT-iDm"/>
+                            <constraint firstItem="qy0-8U-fTA" firstAttribute="top" secondItem="ofI-gl-CXf" secondAttribute="top" id="fEX-A4-FAh"/>
+                            <constraint firstItem="ofI-gl-CXf" firstAttribute="trailing" secondItem="NNr-ft-gHg" secondAttribute="trailing" constant="100" id="iGT-kz-FZ8"/>
+                            <constraint firstItem="ofI-gl-CXf" firstAttribute="trailing" secondItem="qy0-8U-fTA" secondAttribute="trailing" constant="20" id="jYc-UA-9bP"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Add Question" id="mPG-mL-HYw">
+                        <barButtonItem key="rightBarButtonItem" title="User's Questions" id="KVn-C1-dSH">
+                            <color key="tintColor" systemColor="systemOrangeColor"/>
+                            <connections>
+                                <segue destination="urq-gk-bQB" kind="show" id="8X2-v3-jrL"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="tableView" destination="qy0-8U-fTA" id="4l9-c9-QvH"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="1Wo-aG-i6z" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3523" y="-328"/>
+        </scene>
+        <!--User's Questions-->
+        <scene sceneID="tEa-XO-kW4">
+            <objects>
+                <viewController id="urq-gk-bQB" customClass="UserQuestionsViewController" customModule="WhoWantsToBeAMillionaire" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="gS5-hy-xlk">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="vcI-2W-P2b">
+                                <rect key="frame" x="20" y="88" width="374" height="774"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="userQuestionCell" rowHeight="60" id="tAW-XH-oQq">
+                                        <rect key="frame" x="0.0" y="44.5" width="374" height="60"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="tAW-XH-oQq" id="xf3-co-SXK">
+                                            <rect key="frame" x="0.0" y="0.0" width="374" height="60"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="lzR-Ou-B1c"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="vcI-2W-P2b" firstAttribute="bottom" secondItem="lzR-Ou-B1c" secondAttribute="bottom" id="5tb-bd-Cdy"/>
+                            <constraint firstItem="lzR-Ou-B1c" firstAttribute="trailing" secondItem="vcI-2W-P2b" secondAttribute="trailing" constant="20" id="Uu5-bq-G7K"/>
+                            <constraint firstItem="vcI-2W-P2b" firstAttribute="top" secondItem="lzR-Ou-B1c" secondAttribute="top" id="Vqe-hy-xvI"/>
+                            <constraint firstItem="vcI-2W-P2b" firstAttribute="leading" secondItem="lzR-Ou-B1c" secondAttribute="leading" constant="20" id="qkn-z7-FiL"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="User's Questions" id="w9U-k6-r6C">
+                        <barButtonItem key="rightBarButtonItem" image="trash" catalog="system" id="3L9-Uk-5Ci">
+                            <color key="tintColor" systemColor="systemOrangeColor"/>
+                            <connections>
+                                <action selector="clearButtonpressed:" destination="urq-gk-bQB" id="vb2-Go-pom"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="tableView" destination="vcI-2W-P2b" id="ATl-Ff-nZF"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="brx-jd-6VD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4300" y="-328"/>
         </scene>
         <!--Main Menu-->
         <scene sceneID="pPR-zN-ZkE">
@@ -385,7 +681,7 @@ IS</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3ul-pc-wPO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3523.1884057971015" y="375"/>
+            <point key="canvasLocation" x="3522" y="375"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="tLB-db-DAW">
@@ -406,9 +702,14 @@ IS</string>
             <point key="canvasLocation" x="1718.840579710145" y="375"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="DoA-Q0-HYi"/>
+    </inferredMetricsTieBreakers>
+    <color key="tintColor" systemColor="systemOrangeColor"/>
     <resources>
         <image name="50.square" catalog="system" width="128" height="114"/>
         <image name="dollarsign.circle" catalog="system" width="128" height="121"/>
+        <image name="gear" catalog="system" width="128" height="119"/>
         <image name="person.3" catalog="system" width="128" height="62"/>
         <image name="phone" catalog="system" width="128" height="115"/>
         <image name="trash" catalog="system" width="121" height="128"/>
@@ -423,6 +724,9 @@ IS</string>
         </systemColor>
         <systemColor name="systemOrangeColor">
             <color red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemYellowColor">
+            <color red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="tertiaryLabelColor">
             <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="sRGB"/>

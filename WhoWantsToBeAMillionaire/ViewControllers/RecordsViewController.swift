@@ -17,7 +17,36 @@ final class RecordsViewController: UIViewController,
     @IBAction func clearButtonPressed(
         _ sender: UIBarButtonItem
     ) {
-        Game.instance.clearRecords()
+        let alert = UIAlertController(
+                        title: "Are you sure?",
+                        message: "All your records will be deleted.",
+                        preferredStyle: .alert)
+        alert.addAction(
+            UIAlertAction(
+                title: "OK",
+                style: .default,
+                handler: clearRecords))
+        alert.addAction(
+            UIAlertAction(
+                title: "Cancel",
+                style: .cancel))
+        present(
+            alert,
+            animated: true)
+    }
+    
+    @IBOutlet var difficultyControl: UISegmentedControl! {
+        didSet {
+            difficultyControl.setTitleTextAttributes(
+                [.foregroundColor: UIColor.white],
+                for: .normal)
+            difficultyControl.setTitleTextAttributes(
+                [.foregroundColor: UIColor.white],
+                for: .selected)
+        }
+    }
+    
+    @IBAction func didChooseDifficulty(_ sender: UISegmentedControl) {
         self.tableView.reloadData()
     }
     
@@ -29,7 +58,39 @@ final class RecordsViewController: UIViewController,
         return dateFormater
     }()
     
-    // MARK: - Functions
+    private var selectedDifficulty: Difficulty {
+        switch self.difficultyControl.selectedSegmentIndex {
+        case 0: return .easy
+        case 1: return .hard
+        case 2: return .insane
+        case 3: return .custom
+        default: return .easy
+        }
+    }
+    
+    private var recordsList: [Record] {
+        switch selectedDifficulty {
+        case .easy: return Game.instance.records.filter {
+            $0.difficulty == .easy
+        }
+        case .hard: return Game.instance.records.filter {
+            $0.difficulty == .hard
+        }
+        case .insane: return Game.instance.records.filter {
+            $0.difficulty == .insane
+        }
+        case .custom: return Game.instance.records.filter {
+            $0.difficulty == .custom
+        }
+        }
+    }
+    
+    private var standartWidth: CGFloat {
+        tableView.bounds.width
+    }
+    private var standartHeight: CGFloat = 40
+    
+    // MARK: - Lyfecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,23 +98,281 @@ final class RecordsViewController: UIViewController,
         tableView.dataSource = self
     }
     
+    // MARK: - Functions
+    
+    func clearRecords(action: UIAlertAction! = nil) {
+        Game.instance.clearRecords()
+        self.tableView.reloadData()
+        navigationController?.popViewController(animated: true)
+    }
+    
+    func tableView(
+        _ tableView: UITableView,
+        viewForHeaderInSection section: Int
+    ) -> UIView? {
+        setupHeader()
+    }
+    
+    func tableView(
+        _ tableView: UITableView,
+        heightForHeaderInSection section: Int
+    ) -> CGFloat {
+        standartHeight * 1.5
+    }
+    
+    func tableView(
+        _ tableView: UITableView,
+        heightForRowAt indexPath: IndexPath
+    ) -> CGFloat {
+        standartHeight
+    }
+    
     func tableView(
         _ tableView: UITableView,
         numberOfRowsInSection section: Int
     ) -> Int {
-        Game.instance.records.count
+        recordsList.count
     }
     
     func tableView(
         _ tableView: UITableView,
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
+        setupCell(indexPath: indexPath)
+    }
+
+    func setupCell(indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(
-                                withIdentifier: "recordCell",
-                                for: indexPath)
-        let record = Game.instance.records[indexPath.row]
-        cell.textLabel?.text = self.dateFormater.string(from: record.date)
-        cell.detailTextLabel?.text = "\(record.score)$"
+                                        withIdentifier: "recordCell",
+                                        for: indexPath)
+        let record = recordsList[indexPath.row]
+        
+        let width = standartWidth / 4
+        let iconSize = standartHeight / 2
+        let spacer: CGFloat = 2
+
+        let nameLabel = UILabel(
+                            frame: CGRect(
+                                x: 0,
+                                y: 0,
+                                width: width,
+                                height: standartHeight))
+        nameLabel.text = record.name
+        let dateLabel = UILabel(
+                            frame: CGRect(
+                                x: width,
+                                y: 0,
+                                width: width,
+                                height: standartHeight))
+        dateLabel.text = self.dateFormater.string(from: record.date)
+        let scoreLabel = UILabel(
+                            frame: CGRect(
+                                x: width * 3,
+                                y: 0,
+                                width: width,
+                                height: standartHeight))
+        scoreLabel.text = "$\(record.score)"
+        
+        let lifelinesUsedView = UIView(
+                                    frame: CGRect(
+                                        x: width * 2,
+                                        y: 0,
+                                        width: width,
+                                        height: standartHeight))
+        
+        var lifelinesUsedCount: Int {
+            var number = 0
+            if record.removeTwoUsed { number += 1 }
+            if record.callFriendUsed { number += 1 }
+            if record.audienceHelpUsed { number += 1 }
+            return number
+        }
+        
+        switch lifelinesUsedCount {
+        case 0:
+            let lifelinesLabel = UILabel(
+                                    frame: CGRect(
+                                        x: 0,
+                                        y: 0,
+                                        width: width,
+                                        height: standartHeight))
+            lifelinesLabel.text = "-"
+            setupLabel(
+                label: lifelinesLabel,
+                textAlignment: .center,
+                color: .white,
+                fontSize: 14)
+            addSubviews(
+                to: lifelinesUsedView,
+                add: [lifelinesLabel])
+        case 1:
+            let lifelineIcon = UIImageView(
+                                    frame: CGRect(
+                                        x: width / 2 - iconSize / 2,
+                                        y: iconSize / 2,
+                                        width: iconSize,
+                                        height: iconSize))
+            if record.removeTwoUsed {
+                lifelineIcon.image = UIImage(systemName: "50.square")
+            }
+            if record.callFriendUsed {
+                lifelineIcon.image = UIImage(systemName: "phone")
+            }
+            if record.audienceHelpUsed {
+                lifelineIcon.image = UIImage(systemName: "person.3")
+            }
+            addSubviews(
+                to: lifelinesUsedView,
+                add: [lifelineIcon])
+        case 2:
+            let lifelineIcon2 = UIImageView(
+                                    frame: CGRect(
+                                        x: width / 2 + spacer,
+                                        y: iconSize / 2,
+                                        width: iconSize,
+                                        height: iconSize))
+            let lifelineIcon1 = UIImageView(
+                                    frame: CGRect(
+                                        x: lifelineIcon2.frame.minX - iconSize - spacer,
+                                        y: iconSize / 2,
+                                        width: iconSize,
+                                        height: iconSize))
+            if record.removeTwoUsed {
+                lifelineIcon1.image = UIImage(systemName: "50.square")
+                lifelineIcon2.image = record.callFriendUsed
+                ? UIImage(systemName: "phone") : UIImage(systemName: "person.3")
+            } else {
+                lifelineIcon1.image = UIImage(systemName: "phone")
+                lifelineIcon2.image = UIImage(systemName: "person.3")
+            }
+            addSubviews(
+                to: lifelinesUsedView,
+                add: [lifelineIcon1,
+                      lifelineIcon2])
+        case 3:
+            let lifelineIcon2 = UIImageView(
+                                    frame: CGRect(
+                                        x: width - iconSize / 2,
+                                        y: iconSize / 2,
+                                        width: iconSize,
+                                        height: iconSize))
+            let lifelineIcon3 = UIImageView(
+                                    frame: CGRect(
+                                        x: lifelineIcon2.frame.maxX + spacer,
+                                        y: iconSize / 2,
+                                        width: iconSize,
+                                        height: iconSize))
+            let lifelineIcon1 = UIImageView(
+                                    frame: CGRect(
+                                        x: lifelineIcon2.frame.minX - iconSize - spacer,
+                                        y: iconSize / 2,
+                                        width: iconSize,
+                                        height: iconSize))
+            lifelineIcon1.image = UIImage(systemName: "50.square")
+            lifelineIcon2.image = UIImage(systemName: "phone")
+            lifelineIcon3.image = UIImage(systemName: "person.3")
+            addSubviews(
+                to: lifelinesUsedView,
+                add: [lifelineIcon1,
+                      lifelineIcon2,
+                      lifelineIcon3])
+        default: break
+        }
+        
+        var views = [lifelinesUsedView]
+        let labels = [nameLabel, dateLabel, scoreLabel]
+        labels.forEach { label in
+            setupLabel(
+                label: label,
+                textAlignment: .center,
+                color: .white,
+                fontSize: 10) }
+        views.append(contentsOf: labels)
+        
+        cell.subviews.forEach { $0.removeFromSuperview() } // prepare for reuse
+        addSubviews(
+            to: cell,
+            add: views)
         return cell
+    }
+    
+    func setupLabel(
+        label: UILabel,
+        textAlignment: NSTextAlignment,
+        color: UIColor,
+        fontSize: CGFloat
+    ) {
+        label.textAlignment = textAlignment
+        label.textColor = color
+        label.font = label.font.withSize(fontSize)
+    }
+    
+    func addSubviews(
+        to view: UIView,
+        add subviews: [UIView]
+    ) {
+        subviews.forEach { view.addSubview($0) }
+    }
+    
+    func setupHeader() -> UIView {
+        let width = standartWidth / 4
+        let height = standartHeight * 1.5
+        let header = UITableViewHeaderFooterView(
+            frame: CGRect(
+                    x: 0,
+                    y: 0,
+                    width: standartWidth,
+                    height: height))
+        let nameLabel = UILabel(
+            frame: CGRect(
+                    x: 0,
+                    y: 0,
+                    width: width,
+                    height: height))
+        let dateLabel = UILabel(
+            frame: CGRect(
+                    x: width,
+                    y: 0,
+                    width: width,
+                    height: height))
+        let lifelinesLabel = UILabel(
+            frame: CGRect(
+                    x: width * 2,
+                    y: 0,
+                    width: width,
+                    height: height))
+        let scoreLabel = UILabel(
+            frame: CGRect(
+                    x: width * 3,
+                    y: 0,
+                    width: width,
+                    height: height))
+        
+        nameLabel.text = "Name"
+        dateLabel.text = "Date"
+        scoreLabel.text = "Score"
+        lifelinesLabel.text = "Lifelines \n Used"
+        lifelinesLabel.numberOfLines = 2
+        
+        let labels = [
+            nameLabel,
+            dateLabel,
+            lifelinesLabel,
+            scoreLabel
+        ]
+        
+        labels.forEach { label in
+            setupLabel(
+                label: label,
+                textAlignment: .center,
+                color: .systemOrange,
+                fontSize: 14) }
+        addSubviews(
+            to: header,
+            add: labels)
+        
+        tableView.sectionHeaderTopPadding = 0
+        
+        return header
     }
 }

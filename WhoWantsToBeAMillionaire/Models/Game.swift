@@ -14,6 +14,7 @@ class Game {
     var gameSession: GameSession?
     static let instance = Game()
     private let recordsCaretaker = RecordsCaretaker()
+    private let userQuestionsCaretaker = UserQuestionsCaretaker()
     private init() { }
     
     // MARK: - Properties
@@ -21,6 +22,13 @@ class Game {
     var records = [Record]() {
         didSet {
             recordsCaretaker.save(records: records)
+        }
+    }
+    
+    var userQuestions = [Question]() {
+        didSet {
+            userQuestionsCaretaker.save(questions: userQuestions)
+            print(userQuestions)
         }
     }
     
@@ -33,16 +41,42 @@ class Game {
     func clearRecords() {
         records = []
     }
+    
+    func addQuestions(questions: [Question]) {
+        self.userQuestions.append(contentsOf: questions)
+    }
+    
+    func clearUserQuestions() {
+        userQuestions = []
+    }
 }
 
     // MARK: - Extensions
 
 extension Game: GameDelegate {
-    func didEndGame(withScore score: Int) {
+    func didEndGame(
+        difficulty: Difficulty,
+        withScore score: Int,
+        name: String,
+        removeTwoUsed: Bool,
+        callFriendUsed: Bool,
+        audienceHelpUsed: Bool
+    ) {
         let newRecord = Record(
-                            date: Date(),
-                            score: score)
+            date: Date(),
+            score: score,
+            name: name,
+            difficulty: difficulty,
+            removeTwoUsed: removeTwoUsed,
+            callFriendUsed: callFriendUsed,
+            audienceHelpUsed: audienceHelpUsed)
+        
         Game.instance.addRecord(record: newRecord)
     }
 }
 
+extension Game: AddQuestionDelegate {
+    func didTapAddQuestions(questions: [Question]) {
+        Game.instance.addQuestions(questions: questions)
+    }
+}

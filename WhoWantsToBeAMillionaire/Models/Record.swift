@@ -13,4 +13,9 @@ struct Record: Codable {
     
     let date: Date
     let score: Int
+    let name: String
+    let difficulty: Difficulty
+    let removeTwoUsed: Bool
+    let callFriendUsed: Bool
+    let audienceHelpUsed: Bool
 }
