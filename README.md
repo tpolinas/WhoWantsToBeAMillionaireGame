@@ -29,4 +29,8 @@
 ### 3. Memento
 
     All the records are stored locally on your device in 'UserDefaults.standard'.
+    
+### 4. Strategy 
+    
+    Difficulty of the game and questions sequence are implemented with Strategy pattern.
    
