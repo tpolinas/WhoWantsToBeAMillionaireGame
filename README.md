@@ -38,7 +38,7 @@
     
     User's questions adding is implemented with Builder pattern. 
     
-### 6. Facade. 
+### 6. Facade 
 
     Strategies are hidden from the Main Menu VC with Facade pattern.
     
