@@ -33,4 +33,10 @@
 ### 4. Strategy 
     
     Difficulty of the game and questions sequence are implemented with Strategy pattern.
+    
+### 5. Builder 
+    
+    User's questions adding is implemented with Builder pattern. 
+    
+    
    
